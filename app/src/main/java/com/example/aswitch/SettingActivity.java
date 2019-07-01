@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class Setting extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
 
 
     public static final String APP_PREFERENCES = "mysettings";// имя файла шде будут храниться данные

@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Setting"
+            android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
             android:theme="@style/AppTheme.NoActionBar"> // Страница снастройками
             <intent-filter>
-                <action android:name="com.example.aswitch.Setting" />
+                <action android:name="com.example.aswitch.SettingActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -37,5 +37,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

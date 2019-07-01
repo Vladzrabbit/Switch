@@ -38,12 +38,13 @@ public class MainActivity extends AppCompatActivity  {
     EditText editText;
     Button btnLoad;
     final String SAVED_TEXT = "saved_text";
-    Setting setting;
+    SettingActivity setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity  {
                 startActivity(int1);// запускаю
                 return true;
             case R.id.action_settings:
-                Intent int2=new Intent("com.example.aswitch.Setting");// обьект в котором хранится ссылка на 2ую страницу " настройки"
+                Intent int2=new Intent("com.example.aswitch.SettingActivity");// обьект в котором хранится ссылка на 2ую страницу " настройки"
                 startActivity(int2);
                 return true;
             default:
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
     void loadText() {
-        setting.sPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());;
+        setting.sPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String savedText = setting.sPref.getString(SAVED_TEXT, "");
         editText.setText(savedText);
         Toast.makeText(getApplicationContext(),  " Load\n" ,Toast.LENGTH_SHORT).show();
