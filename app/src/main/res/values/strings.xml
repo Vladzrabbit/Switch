@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Switch</string>
+    <string name="name_switch">Активация функционала стабилизации</string>
+    <string name="OFF">Приложение не активно</string>
+    <string name="ON">Приложение активно</string>
+    <string name="about_text">Приложение направлено на стабилизацию изображения</string>
+    <string name="about_title">О программе</string>
+    <string name="setting">Настройки</string>
+    <string name="action_settings">Меню</string>
+    <string name="title_activity_second">SecondActivity</string>
+    <string name="title_activity_setting">Setting</string>
+    <string name="test">Я помню чудное мгновенье\n
+        Передо мной явилась ты,\n
+        Как мимолетное виденье,\n
+        Как гений чистой красоты.\n
+        \n
+        В томленьях грусти безнадежной,\n
+        В тревогах шумной суеты,\n
+        Звучал мне долго голос нежный\n
+        И снились милые черты.\n
+        \n
+        Шли годы. Бурь порыв мятежный\n
+        Рассеял прежние мечты,\n
+        И я забыл твой голос нежный,\n
+        Твои небесные черты.\n
+    </string>
+</resources>
