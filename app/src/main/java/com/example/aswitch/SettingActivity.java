@@ -1,10 +1,8 @@
 package com.example.aswitch;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -132,11 +130,7 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
         super.onResume();
 
         if (mSettings.contains(VELOCITY_FRICTION_KEY)) {//Может дать ошибку !!!
-            // Получаем число из настроек
-            velocity_str = mSettings.getInt(VELOCITY_FRICTION_KEY, 0);// присваиваем значение из счетчиков их файла
-            Lowpass_str=mSettings.getInt(LOW_PASS_ALPHA_KEY, 0);
-            Position_str=mSettings.getInt(POSITION_FRICTION_KEY, 0);
-            Velocity_am_str=mSettings.getInt(VELOCITY_AMPL_KEY , 0);
+            load(mSettings);
             // Выводим на экран данные из настроек
             velocity.setText("velocity friction="+String.valueOf(velocity_str));// выводим текст по запуску приложения
             velocity_s.setProgress(velocity_str);// устанавливаем значение по запуску приложения
@@ -153,12 +147,7 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
     protected void onPause() {
         super.onPause();
         // Запоминаем данные
-        SharedPreferences.Editor editor = mSettings.edit();// устанавливаем туда значения, класс с помощью которого изменяется значения
-        editor.putInt(VELOCITY_FRICTION_KEY, velocity_str);
-        editor.putInt(LOW_PASS_ALPHA_KEY, Lowpass_str);
-        editor.putInt(POSITION_FRICTION_KEY, Position_str);
-        editor.putInt(VELOCITY_AMPL_KEY , Velocity_am_str);
-        editor.apply();//изменения вступают в силу
+    save(mSettings);
     }
 
 
@@ -166,19 +155,60 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnSave:
-                saveText();
+                save(mSettings);
                 break;
             default:
                 break;
         }
     }
 
+
+    void load(SharedPreferences mSettings){
+        // Получаем число из настроек
+        velocity_str = mSettings.getInt(VELOCITY_FRICTION_KEY, 0);// присваиваем значение из счетчиков их файла
+        Lowpass_str=mSettings.getInt(LOW_PASS_ALPHA_KEY, 0);
+        Position_str=mSettings.getInt(POSITION_FRICTION_KEY, 0);
+        Velocity_am_str=mSettings.getInt(VELOCITY_AMPL_KEY , 0);
+    }
+    public void save(SharedPreferences mSettings)
+    {
+        SharedPreferences.Editor editor = mSettings.edit();
+        save(editor);
+        editor.commit();
+    }
+
+    public void saveDeferred(SharedPreferences mSettings)
+    {
+        SharedPreferences.Editor editor = mSettings.edit();
+        save(editor);
+        editor.apply();
+    }
+
+    public void save(SharedPreferences.Editor editor)
+    {
+        editor.putInt(VELOCITY_FRICTION_KEY, velocity_str);
+        editor.putInt(LOW_PASS_ALPHA_KEY, Lowpass_str);
+        editor.putInt(POSITION_FRICTION_KEY, Position_str);
+        editor.putInt(VELOCITY_AMPL_KEY , Velocity_am_str);
+    }
+
+    /*
     void saveText() {
-        sPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        sPref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putString(SAVED_TEXT, etText.getText().toString());//получить тескт который ввел пользователь
         ed.apply();
         Toast.makeText(this, "Text saved", Toast.LENGTH_SHORT).show();
+    }
+    */
+    public int getVelocity()
+    {
+        return  velocity_str;
+    }
+
+    public void setVelocity(Integer velocity_str)
+    {
+        this. velocity_str=  velocity_str;
     }
 
 }

@@ -1,3 +1,11 @@
+
+/*
+ * MainActivity- в этом файле осуществляется открытие меню, основные действия по стабилизации экрана.
+ *
+ * Version 1.1
+ *
+ * 08.07 -работа надпередачей контекста
+ */
 package com.example.aswitch;
 
 
@@ -38,7 +46,8 @@ public class MainActivity extends AppCompatActivity  {
     EditText editText;
     Button btnLoad;
     final String SAVED_TEXT = "saved_text";
-    SettingActivity setting;
+    SharedPreferences sPref;
+    private AppSettings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +62,7 @@ public class MainActivity extends AppCompatActivity  {
         textView = (TextView)findViewById(R.id.textView);//тестоовое окно с Пушкиным , которое ясобираюсь стабилизировать
         tvText = (TextView)findViewById(R.id.tvText);
 
-
-
+        settings = AppSettings.getAppSettings(getApplicationContext());//перетаскиваю контекст ,пока не работает
 
         final Switch sw = (Switch) findViewById(R.id.monitored_switch);//Создал свитч на вкл выкл функции
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -151,16 +159,12 @@ public class MainActivity extends AppCompatActivity  {
 
 
     void loadText() {
-        setting.sPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String savedText = setting.sPref.getString(SAVED_TEXT, "");
-        editText.setText(savedText);
-        Toast.makeText(getApplicationContext(),  " Load\n" ,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),  " Load\n" + settings.getVelocity(),Toast.LENGTH_SHORT).show();
     }
 
     public void LoadOnClick(View view) {
         loadText();
     }
-
 
 }
 
