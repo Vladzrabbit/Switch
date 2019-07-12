@@ -34,6 +34,7 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
     public SeekBar LowPass_s;
     public SeekBar Position_s;
     public SeekBar velocity_am_s;
+    public int test = 60;
 
     EditText etText;
     Button btnSave;
@@ -152,10 +153,10 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) {// обработчик значений при нажатии на кнопки
         switch (v.getId()) {
             case R.id.btnSave:
-                save(mSettings);
+                Toast.makeText(this, "Text saved"+getLowPassAlpha(), Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -163,28 +164,28 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
     }
 
 
-    void load(SharedPreferences mSettings){
+    void load(SharedPreferences mSettings){ // метод который позволяет загрузить значения свитчей из настроек
         // Получаем число из настроек
         velocity_str = mSettings.getInt(VELOCITY_FRICTION_KEY, 0);// присваиваем значение из счетчиков их файла
         Lowpass_str=mSettings.getInt(LOW_PASS_ALPHA_KEY, 0);
         Position_str=mSettings.getInt(POSITION_FRICTION_KEY, 0);
         Velocity_am_str=mSettings.getInt(VELOCITY_AMPL_KEY , 0);
     }
-    public void save(SharedPreferences mSettings)
+    public void save(SharedPreferences mSettings)// метод который позволяет внести изменения свитчей в настройки
     {
         SharedPreferences.Editor editor = mSettings.edit();
         save(editor);
         editor.commit();
     }
 
-    public void saveDeferred(SharedPreferences mSettings)
+    public void saveDeferred(SharedPreferences mSettings)// метод который пока не понял зачем нужен
     {
         SharedPreferences.Editor editor = mSettings.edit();
         save(editor);
         editor.apply();
     }
 
-    public void save(SharedPreferences.Editor editor)
+    public void save(SharedPreferences.Editor editor) // метод позволяющий положить изменение значений свитчей в настройки
     {
         editor.putInt(VELOCITY_FRICTION_KEY, velocity_str);
         editor.putInt(LOW_PASS_ALPHA_KEY, Lowpass_str);
@@ -192,24 +193,28 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
         editor.putInt(VELOCITY_AMPL_KEY , Velocity_am_str);
     }
 
-    /*
-    void saveText() {
-        sPref = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sPref.edit();
-        ed.putString(SAVED_TEXT, etText.getText().toString());//получить тескт который ввел пользователь
-        ed.apply();
-        Toast.makeText(this, "Text saved", Toast.LENGTH_SHORT).show();
-    }
-    */
-    public int getVelocity()
+
+    public float getVelocityFriction() //метод который передает значения в MainActivity
     {
         return  velocity_str;
     }
-
+    public float getPositionFriction() //метод который передает значения в MainActivity
+    {
+        return  Position_str;
+    }
+    public float getLowPassAlpha() //метод который передает значения в MainActivity
+    {
+        return  Lowpass_str;
+    }
+    public float getVelocityAmpl() //метод который передает значения в MainActivity
+    {
+        return  Velocity_am_str;
+    }
+    /*
     public void setVelocity(Integer velocity_str)
     {
         this. velocity_str=  velocity_str;
     }
-
+    */
 }
 

@@ -17,6 +17,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,23 @@ public class MainActivity extends AppCompatActivity  {
     final String SAVED_TEXT = "saved_text";
     SharedPreferences sPref;
     private AppSettings settings;
+    public SettingActivity setAct;
+    public Integer velocity_str=68; // ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public Integer Lowpass_str=68;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public Integer Position_str=68;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public Integer Velocity_am_str=68;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+
+
+    private final float[] tempAcc = new float[3];
+    private final float[] acc = new float[3];
+    private final float[] velocity = new float[3];
+    private final float[] position = new float[3];
+    private long timestamp = 0;
+    private boolean accListenerRegistered = false;
+    private int x = 0, y = 0;
+
+    private IBinder flinger = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +168,7 @@ public class MainActivity extends AppCompatActivity  {
     public void onSensorChanged(SensorEvent event) {
                 for (int i = 0; i < 3; i++) {
                     valuesLinAccel[i] = event.values[i];
+                    
                     textView .setTranslationX(valuesLinAccel[0]);//двигаем изображения
                     textView .setTranslationY(valuesLinAccel[1]);
                 }
@@ -159,7 +178,8 @@ public class MainActivity extends AppCompatActivity  {
 
 
     void loadText() {
-        Toast.makeText(getApplicationContext(),  " Load\n" + settings.getVelocity(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),  " Load\n"+velocity_str,Toast.LENGTH_SHORT).show(); //  пытаюсь передать данные по нажатию кнопки
+
     }
 
     public void LoadOnClick(View view) {

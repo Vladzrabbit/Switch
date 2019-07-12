@@ -15,9 +15,9 @@ public class Application extends android.app.Application
 	@Override
 	public void onCreate()
 	{
-		settings = new AppSettings(PreferenceManager.getDefaultSharedPreferences(this));
-		settings.save();//ХЗ
 		settings.load();
+		settings = new AppSettings(PreferenceManager.getDefaultSharedPreferences(this));
+
 		super.onCreate();
 	}
 }
