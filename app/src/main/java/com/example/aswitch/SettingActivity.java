@@ -210,11 +210,6 @@ public class SettingActivity extends AppCompatActivity implements SeekBar.OnSeek
     {
         return  Velocity_am_str;
     }
-    /*
-    public void setVelocity(Integer velocity_str)
-    {
-        this. velocity_str=  velocity_str;
-    }
-    */
+
 }
 

@@ -33,6 +33,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.barteksc.pdfviewer.PDFView;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,10 +52,11 @@ public class MainActivity extends AppCompatActivity  {
     SharedPreferences sPref;
     private AppSettings settings;
     public SettingActivity setAct;
-    public Integer velocity_str=68; // ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
-    public Integer Lowpass_str=68;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
-    public Integer Position_str=68;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
-    public Integer Velocity_am_str=68;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public float velocity_str=0.2f; // ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public float Lowpass_str=0.85f;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public float Position_str=0.1f;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public float Velocity_am_str=10000;// ВНИМАНИЕ КОСТЫЛЬ!!! Эти значения должны прийти из вкладки Setting Activity
+    public  PDFView pdfView;
 
 
     private final float[] tempAcc = new float[3];
@@ -73,6 +76,9 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main);
+        PDFView pdfView=(PDFView) findViewById(R.id.pdfView);
+        pdfView.fromAsset("file.pdf").load();//ткрываю файл в PDF
+
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorLinAccel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -168,23 +174,63 @@ public class MainActivity extends AppCompatActivity  {
     public void onSensorChanged(SensorEvent event) {
                 for (int i = 0; i < 3; i++) {
                     valuesLinAccel[i] = event.values[i];
-                    
-                    textView .setTranslationX(valuesLinAccel[0]);//двигаем изображения
-                    textView .setTranslationY(valuesLinAccel[1]);
+                    if (timestamp != 0)
+                    {
+                        tempAcc[0] = Utils.rangeValue(event.values[0], -Constants.MAX_ACC, Constants.MAX_ACC);
+                        tempAcc[1] = Utils.rangeValue(event.values[1], -Constants.MAX_ACC, Constants.MAX_ACC);
+                        tempAcc[2] = Utils.rangeValue(event.values[2], -Constants.MAX_ACC, Constants.MAX_ACC);
+
+                        Utils.lowPassFilter(tempAcc, acc, getLowPassAlpha());//Костыль!
+
+                        float dt = (event.timestamp - timestamp) * Constants.NS2S;
+
+                        for(int index = 0; index < 3; ++index)
+                        {
+                            velocity[index] += acc[index] * dt - getVelocityFriction() * velocity[index];//Костыль!
+                            velocity[index] = Utils.fixNanOrInfinite(velocity[index]);
+
+                            position[index] += velocity[index] * getVelocityAmpl() * dt - getPositionFriction() * position[index];//Костыль!
+                            position[index] = Utils.rangeValue(position[index], -Constants.MAX_POS_SHIFT, Constants.MAX_POS_SHIFT);
+                        }
+                    }
+                    else
+                    {
+                        velocity[0] = velocity[1] = velocity[2] = 0f;
+                        position[0] = position[1] = position[2] = 0f;
+
+                        acc[0] = Utils.rangeValue(event.values[0], -Constants.MAX_ACC, Constants.MAX_ACC);
+                        acc[1] = Utils.rangeValue(event.values[1], -Constants.MAX_ACC, Constants.MAX_ACC);
+                        acc[2] = Utils.rangeValue(event.values[2], -Constants.MAX_ACC, Constants.MAX_ACC);
+                    }
+
+                    timestamp = event.timestamp;
+                    //textView .setTranslationX(-position[0]);//двигаем изображения
+                    //textView .setTranslationY(position[1]);
+                    //pdfView.setTranslationX(-position[0]);
+                    //pdfView.setTranslationY(position[1]);
+
                 }
     }
     };
 
 
-
-    void loadText() {
-        Toast.makeText(getApplicationContext(),  " Load\n"+velocity_str,Toast.LENGTH_SHORT).show(); //  пытаюсь передать данные по нажатию кнопки
-
+    public float getVelocityFriction() //ВНИМАНИЕ!!! КОСТЫЛЬ!!! Дублирует функционал из Setting Activity
+    {
+        return  velocity_str;
+    }
+    public float getPositionFriction() //ВНИМАНИЕ!!! КОСТЫЛЬ!!! Дублирует функционал из Setting Activity
+    {
+        return  Position_str;
+    }
+    public float getLowPassAlpha() //ВНИМАНИЕ!!! КОСТЫЛЬ!!! Дублирует функционал из Setting Activity
+    {
+        return  Lowpass_str;
+    }
+    public float getVelocityAmpl() //ВНИМАНИЕ!!! КОСТЫЛЬ!!! Дублирует функционал из Setting Activity
+    {
+        return  Velocity_am_str;
     }
 
-    public void LoadOnClick(View view) {
-        loadText();
-    }
 
 }
 
