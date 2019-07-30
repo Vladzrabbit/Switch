@@ -204,8 +204,8 @@ public class MainActivity extends AppCompatActivity  {
                     }
 
                     timestamp = event.timestamp;
-                    //textView .setTranslationX(-position[0]);//двигаем изображения
-                    //textView .setTranslationY(position[1]);
+                    textView .setTranslationX(-position[0]);//двигаем изображения
+                    textView .setTranslationY(position[1]);
                     //pdfView.setTranslationX(-position[0]);
                     //pdfView.setTranslationY(position[1]);
 
